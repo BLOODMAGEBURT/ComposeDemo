@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ComposeDemo</string>
+    <string name="title_activity_drag">DragActivity</string>
+    <string name="title_activity_custom_text">CustomTextActivity</string>
+    <string name="title_activity_pager">PagerActivity</string>
+    <string name="title_activity_anim_effect">AnimEffectActivity</string>
+    <string name="title_activity_draw_scope">DrawScopeActivity</string>
+</resources>
