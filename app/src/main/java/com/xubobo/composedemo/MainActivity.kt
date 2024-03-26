@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -29,8 +30,17 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
 
 
-                val actions =
-                    listOf("Item Drag", "Item CustomText", "Item Pager", "Item Anim", "Item Draw")
+                val actions = remember {
+                    listOf(
+                        "Item Drag",
+                        "Item CustomText",
+                        "Item Pager",
+                        "Item Anim",
+                        "Item Draw",
+                        "Item Anchor",
+                        "Item Zoom",
+                    )
+                }
 
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -60,6 +70,8 @@ class MainActivity : ComponentActivity() {
             "Item Pager" -> startActivityX<PagerActivity>()
             "Item Anim" -> startActivityX<AnimEffectActivity>()
             "Item Draw" -> startActivityX<DrawScopeActivity>()
+            "Item Anchor" -> startActivityX<AnchorActivity>()
+            "Item Zoom" -> startActivityX<ZoomActivity>()
 
             else -> {}
         }

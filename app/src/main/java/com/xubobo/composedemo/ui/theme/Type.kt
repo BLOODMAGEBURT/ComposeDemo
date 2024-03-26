@@ -19,17 +19,17 @@ val roboto = FontFamily(
     Font(R.font.roboto_lightitalic, FontWeight.Light, FontStyle.Italic),
 )
 
+
 val noto = FontFamily(
-    Font(R.font.notosans_regular, FontWeight.Normal),
-    Font(R.font.notosans_semibold, FontWeight.SemiBold),
-    Font(R.font.notosans_bold, FontWeight.Bold),
+    Font(R.font.noto_sans, FontWeight.Normal),
+    Font(R.font.noto_sans_bold, FontWeight.Bold),
 )
 
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(
-//        fontFamily = FontFamily.Default,
-        fontFamily = roboto,
+        fontFamily = FontFamily.Default,
+//        fontFamily = noto,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,

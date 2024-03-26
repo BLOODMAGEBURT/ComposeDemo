@@ -53,8 +53,17 @@ class CustomTextActivity : ComponentActivity() {
                     ) {
                         Column {
                             Text(text = "hello你好1234567890", fontWeight = FontWeight.Normal)
+                            Text(
+                                text = "hello你好1234567890",
+                                fontWeight = FontWeight.Normal,
+                                fontFamily = noto
+                            )
                             Text(text = "hello你好1234567890", fontWeight = FontWeight.SemiBold)
-                            Text(text = "hello你好1234567890", fontWeight = FontWeight.Bold)
+                            Text(
+                                text = "hello你好1234567890",
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = noto
+                            )
                         }
                         Column {
                             Text(text = "1234567890")

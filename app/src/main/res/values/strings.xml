@@ -5,4 +5,6 @@
     <string name="title_activity_pager">PagerActivity</string>
     <string name="title_activity_anim_effect">AnimEffectActivity</string>
     <string name="title_activity_draw_scope">DrawScopeActivity</string>
+    <string name="title_activity_anchor">AnchorActivity</string>
+    <string name="title_activity_zoom">ZoomActivity</string>
 </resources>

@@ -15,6 +15,16 @@
         android:theme="@style/Theme.ComposeDemo"
         tools:targetApi="31">
         <activity
+            android:name=".ZoomActivity"
+            android:exported="false"
+            android:label="@string/title_activity_zoom"
+            android:theme="@style/Theme.ComposeDemo" />
+        <activity
+            android:name=".AnchorActivity"
+            android:exported="false"
+            android:label="@string/title_activity_anchor"
+            android:theme="@style/Theme.ComposeDemo" />
+        <activity
             android:name=".DrawScopeActivity"
             android:exported="false"
             android:label="@string/title_activity_draw_scope"

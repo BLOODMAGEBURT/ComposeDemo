@@ -2,22 +2,20 @@ package com.xubobo.composedemo
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.CheckBox
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.core.animateIntOffsetAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Arrangement
@@ -25,28 +23,25 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.SwipeToDismissBoxDefaults.positionalThreshold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
@@ -89,14 +84,65 @@ class DragActivity : ComponentActivity() {
                         DragPointBox()
                         SoundSwitch()
 
+                        VerticalSwitch()
+
                         DragSortableLazyColumn()
                     }
                 }
             }
         }
     }
+
+
 }
 
+
+enum class VerticalSwitchState {
+    UP,
+    DOWN
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun VerticalSwitch() {
+    val density = LocalDensity.current
+
+    val anchoredState = remember {
+        AnchoredDraggableState(
+            initialValue = VerticalSwitchState.UP,
+            anchors = DraggableAnchors {
+                VerticalSwitchState.UP at 0f
+                VerticalSwitchState.DOWN at 50.dp.toPxf(density)
+            },
+            positionalThreshold = { distance: Float -> distance * 0.4f },
+            velocityThreshold = { 150.dp.toPxf(density) },
+            animationSpec = tween()
+        )
+    }
+
+    Box(
+        modifier = Modifier
+            .height(80.dp)
+            .width(30.dp)
+            .border(1.dp, MaterialTheme.colorScheme.errorContainer, CircleShape)
+    ) {
+        Canvas(
+            modifier = Modifier
+                .size(30.dp)
+                .offset {
+                    IntOffset(
+                        0,
+                        anchoredState
+                            .requireOffset()
+                            .roundToInt()
+                    )
+                }
+                .anchoredDraggable(anchoredState, orientation = Orientation.Vertical)
+        ) {
+            drawCircle(Color.Cyan)
+        }
+    }
+}
 
 @Composable
 private fun DragOrientationText() {
@@ -235,9 +281,6 @@ fun SoundSwitch(modifier: Modifier = Modifier) {
                 )
         )
     }
-
-    Switch(checked = true, onCheckedChange = {})
-
 }
 
 
