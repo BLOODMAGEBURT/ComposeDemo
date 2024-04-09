@@ -3,15 +3,12 @@ package com.xubobo.composedemo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,10 +21,11 @@ import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.PagerSnapDistance
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults.elevatedCardColors
 import androidx.compose.material3.Icon
@@ -39,13 +37,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
+import com.xubobo.composedemo.pager.PagerWithTransition
 import com.xubobo.composedemo.ui.theme.ComposeDemoTheme
 import com.xubobo.composedemo.util.HeightSpacer
 import com.xubobo.composedemo.util.LoadImage
@@ -64,12 +62,19 @@ class PagerActivity : ComponentActivity() {
                     Column(
                         Modifier
                             .fillMaxWidth()
-                            .height(150.dp)
+                            .verticalScroll(rememberScrollState())
                     ) {
                         HeightSpacer(value = 12.dp)
 
                         HorizontalPagerDemo()
                         DribbleInspirationPager()
+
+//                        PagerWithTransition(
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .height(300.dp)
+//                        )
+                        PagerInCenter()
                     }
                 }
             }
@@ -78,6 +83,44 @@ class PagerActivity : ComponentActivity() {
 
 
 }
+
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun PagerInCenter() {
+
+    val pageCount = 1000
+    val img = remember {
+        listOf(
+            R.drawable.pexels,
+            R.drawable.ava,
+            R.drawable.xiaohe
+        )
+    }
+
+    val imageSize = remember(img) {
+        img.size
+    }
+
+    val pagerState = rememberPagerState(
+        initialPage = pageCount / 2
+    ) {
+        pageCount
+    }
+
+    HorizontalPager(
+        state = pagerState,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .background(MaterialTheme.colorScheme.tertiary),
+        pageSpacing = 10.dp,
+        contentPadding = PaddingValues(30.dp)
+    ) { page ->
+        LoadImage(data = img[page % imageSize], modifier = Modifier.fillMaxSize())
+    }
+}
+
 
 /**
  *https://dribbble.com/shots/17117814--Drag-This-audio-player-prototype?source=post_page-----12b3b69af2cc--------------------------------
@@ -120,7 +163,6 @@ fun DribbleInspirationPager() {
             }
         }
     }
-
 
 }
 
@@ -192,6 +234,7 @@ private fun HorizontalPagerDemo() {
     val urls = listOf(
         R.drawable.pexels,
         "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-james-wheeler-414612.jpg&fm=jpg",
+        "https://picsum.photos/900/600",
         R.drawable.pexels,
         R.drawable.pexels,
         R.drawable.pexels,
