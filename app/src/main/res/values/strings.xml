@@ -7,4 +7,5 @@
     <string name="title_activity_draw_scope">DrawScopeActivity</string>
     <string name="title_activity_anchor">AnchorActivity</string>
     <string name="title_activity_zoom">ZoomActivity</string>
+    <string name="title_activity_lazy_column">LazyColumnActivity</string>
 </resources>

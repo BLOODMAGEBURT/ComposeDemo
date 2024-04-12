@@ -1,8 +1,10 @@
 package com.xubobo.composedemo
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -33,20 +35,28 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
+import androidx.palette.graphics.Palette
 import com.xubobo.composedemo.pager.PagerWithTransition
 import com.xubobo.composedemo.ui.theme.ComposeDemoTheme
 import com.xubobo.composedemo.util.HeightSpacer
 import com.xubobo.composedemo.util.LoadImage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
 class PagerActivity : ComponentActivity() {
@@ -89,6 +99,7 @@ class PagerActivity : ComponentActivity() {
 @Composable
 private fun PagerInCenter() {
 
+    val context = LocalContext.current
     val pageCount = 1000
     val img = remember {
         listOf(
@@ -98,8 +109,18 @@ private fun PagerInCenter() {
         )
     }
 
+    val bgColorDefault = Color.Transparent
+
     val imageSize = remember(img) {
         img.size
+    }
+
+    val bgColors = remember {
+        mutableListOf<Color>().apply {
+            repeat(pageCount) {
+                add(bgColorDefault)
+            }
+        }
     }
 
     val pagerState = rememberPagerState(
@@ -107,13 +128,47 @@ private fun PagerInCenter() {
     ) {
         pageCount
     }
+    var bgColor by remember {
+        mutableStateOf(bgColorDefault)
+    }
+
+    val animatedBg by animateColorAsState(targetValue = bgColor, label = "bgColor")
+
+    LaunchedEffect(key1 = pagerState.currentPage) {
+        val currentPage = pagerState.currentPage % imageSize
+        launch(Dispatchers.Default) {
+            val selectedColor = bgColors[currentPage]
+            if (selectedColor == bgColorDefault) {
+                Palette.from(BitmapFactory.decodeResource(context.resources, img[currentPage]))
+                    .generate { palette ->
+                        val domainColor =
+                            palette?.lightMutedSwatch?.let { Color(it.rgb) } ?: bgColorDefault
+                        bgColors[currentPage] = domainColor
+                        bgColor = domainColor
+                    }
+            } else {
+                bgColor = selectedColor
+            }
+            // 预加载下一页
+            val nextPage = (currentPage + 1) % imageSize
+            val nextColor = bgColors[nextPage]
+            if (nextColor == bgColorDefault) {
+                Palette.from(BitmapFactory.decodeResource(context.resources, img[nextPage]))
+                    .generate { palette ->
+                        val domainColor =
+                            palette?.lightMutedSwatch?.let { Color(it.rgb) } ?: bgColorDefault
+                        bgColors[nextPage] = domainColor
+                    }
+            }
+        }
+    }
 
     HorizontalPager(
         state = pagerState,
         modifier = Modifier
             .fillMaxWidth()
             .height(200.dp)
-            .background(MaterialTheme.colorScheme.tertiary),
+            .background(animatedBg),
         pageSpacing = 10.dp,
         contentPadding = PaddingValues(30.dp)
     ) { page ->

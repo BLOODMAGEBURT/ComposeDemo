@@ -39,6 +39,7 @@ class MainActivity : ComponentActivity() {
                         "Item Draw",
                         "Item Anchor",
                         "Item Zoom",
+                        "Item LazyColumn",
                     )
                 }
 
@@ -72,7 +73,7 @@ class MainActivity : ComponentActivity() {
             "Item Draw" -> startActivityX<DrawScopeActivity>()
             "Item Anchor" -> startActivityX<AnchorActivity>()
             "Item Zoom" -> startActivityX<ZoomActivity>()
-
+            "Item LazyColumn" -> startActivityX<LazyColumnActivity>()
             else -> {}
         }
 
